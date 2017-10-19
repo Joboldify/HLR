@@ -1,23 +1,29 @@
 #include <stdio.h>
 
 // Definieren Sie ein enum cardd
-typedef enum {N=1, E, S, W} cardd;
+typedef enum {
+	N = 1 << 0, /* 0b0000000000000001 */
+    W = 1 << 1, /* 0b0000000000000010 */
+    E = 1 << 2, /* 0b0000000000000100 */
+    S = 1 << 3  /* 0b0000000000001000 */} cardd;
 
 // Definieren Sie ein 3x3-Array namens map, das Werte vom Typ cardd enthält
 cardd map[3][3];
+
+int checkDir(cardd dir)
+{
+	return (dir == N || dir == W ||dir == E ||dir == S ||
+            dir == (N|W) || dir == (N|E) ||dir == (S|W) ||dir == (S|E));
+}	
 
 // Die Funktion set_dir soll an Position x, y den Wert dir in das Array map eintragen
 // Überprüfen Sie x und y um mögliche Arrayüberläufe zu verhindern
 // Überprüfen Sie außerdem dir auf Gültigkeit
 void set_dir (int x, int y, cardd dir)
 {
-	if(x<3 && x>=0 && y<3 && y>=0 && dir >= 1 && dir <5)
+	if(x<3 && x>=0 && y<3 && y>=0 && checkDir(dir))
 	{
 		map[x][y] = dir;
-	}
-	else
-	{
-		printf("Fehlerhafte Eingabe\n");
 	}
 }
 
@@ -28,19 +34,40 @@ void show_map (void)
 	{
 		for (int j=0; j<3; j++)
 		{
-			printf("%i ", map[i][j]);
+			
+            cardd dir;
+            dir = map[i][j];
+			char* direction = convertToCardinalpoint(dir);
+			printf("%s ", direction);
 		}
 		printf("\n");
 	}
 }
 
-char convertToCardinalpoint(int i)
+//Liefert die Himmelsrichtung als char-Array (String)
+char* convertToCardinalpoint(cardd dir)
 {
-	if(i==1)		{return 'N';}
-	else if(i==2)	{return 'E';}
-	else if(i==3)	{return 'S';}
-	else if(i==4)	{return 'W';}
-	else			{return ' ';}
+	 switch((int)dir)
+    {
+        case N:
+            return "N";
+        case W:
+            return "W";
+        case E:
+            return "E";
+        case S:
+            return "S";
+        case N|W:
+            return "NW";
+        case N|E:
+            return "NE";
+        case S|W:
+            return "SW";
+        case S|E:
+            return "SE";
+        default:
+            return "0";
+    }	
 }
 
 int main (void)
@@ -53,7 +80,7 @@ int main (void)
 	set_dir(2, 1, S);
 
 	show_map();
-/*
+
 	set_dir(0, 0, N|W);
 	set_dir(0, 2, N|E);
 	set_dir(0, 2, N|S);
@@ -62,6 +89,6 @@ int main (void)
 	set_dir(2, 2, E|W);
 
 	show_map();
-*/
+
 	return 0;
 }
