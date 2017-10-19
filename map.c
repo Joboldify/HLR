@@ -27,23 +27,6 @@ void set_dir (int x, int y, cardd dir)
 	}
 }
 
-// Die Funktion show_map soll das Array in Form einer 3x3-Matrix ausgeben
-void show_map (void)
-{
-	for (int i=0; i<3; i++)
-	{
-		for (int j=0; j<3; j++)
-		{
-			
-            cardd dir;
-            dir = map[i][j];
-			char* direction = convertToCardinalpoint(dir);
-			printf("%s ", direction);
-		}
-		printf("\n");
-	}
-}
-
 //Liefert die Himmelsrichtung als char-Array (String)
 char* convertToCardinalpoint(cardd dir)
 {
@@ -69,6 +52,25 @@ char* convertToCardinalpoint(cardd dir)
             return "0";
     }	
 }
+
+// Die Funktion show_map soll das Array in Form einer 3x3-Matrix ausgeben
+void show_map (void)
+{
+	for (int i=0; i<3; i++)
+	{
+		for (int j=0; j<3; j++)
+		{
+			
+            cardd dir;
+            dir = map[i][j];
+			char** direction = convertToCardinalpoint(dir);
+			printf("%s ", direction);
+		}
+		printf("\n");
+	}
+}
+
+
 
 int main (void)
 {
